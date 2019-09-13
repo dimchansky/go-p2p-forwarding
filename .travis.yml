@@ -1,0 +1,25 @@
+language: go
+sudo: false
+
+go:
+  - 1.13.x
+
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+
+env:
+  global:
+    - ARTIFACTS_DIR=artifacts
+
+install:
+  - make dependencies
+
+script:
+  - make lint
+  - make test
+
+after_success:
+  - make cover
+  - bash <(curl -s https://codecov.io/bash) -s ./${ARTIFACTS_DIR}/.cover
